@@ -12,3 +12,5 @@ bundler = {git = "https://github.com/weaveVM/bundler", branch = "main"}
 anyhow = "1.0.96"
 dotenv = "0.15.0"
 alloy = "0.11.1"
+planetscale-driver = "0.5.1"
+serde = "1.0.218"
