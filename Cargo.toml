@@ -10,3 +10,5 @@ axum = "0.7.4"
 tokio = {version = "1.43.0", features = ["full"]}
 bundler = {git = "https://github.com/weaveVM/bundler", branch = "main"}
 anyhow = "1.0.96"
+dotenv = "0.15.0"
+alloy = "0.11.1"
