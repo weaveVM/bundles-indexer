@@ -1,7 +1,10 @@
 pub mod indexer;
 pub mod utils;
 
-use crate::indexer::api::{get_envelope_raw, get_root, resolve_envelope, get_envelopes_of_bundle, get_bundles_of_block, get_envelopes_of_block};
+use crate::indexer::api::{
+    get_bundles_of_block, get_envelope_raw, get_envelopes_of_block, get_envelopes_of_bundle,
+    get_root, resolve_envelope,
+};
 use crate::indexer::cronjob::index;
 use crate::utils::rpc::init_wvm_rpc;
 
@@ -21,11 +24,12 @@ async fn main(
     // server routes
     let router = Router::new()
         .route("/", get(get_root))
-        .route("/envelope/:envelope_txid", get(get_envelope_raw))
-        .route("/envelopes/:bundle_txid", get(get_envelopes_of_bundle))
-        .route("/resolve/:envelope_txid", get(resolve_envelope))
-        .route("/block/bundles/:block_nr", get(get_bundles_of_block))
-        .route("/block/envelopes/:block_nr", get(get_envelopes_of_block));
+        .route("/v1", get(get_root))
+        .route("/v1/envelope/:envelope_txid", get(get_envelope_raw))
+        .route("/v1/envelopes/:bundle_txid", get(get_envelopes_of_bundle))
+        .route("/v1/resolve/:envelope_txid", get(resolve_envelope))
+        .route("/v1/block/bundles/:block_nr", get(get_bundles_of_block))
+        .route("/v1/block/envelopes/:block_nr", get(get_envelopes_of_block));
 
     tokio::task::spawn(async move {
         loop {
