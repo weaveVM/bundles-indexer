@@ -1,7 +1,7 @@
 pub mod indexer;
 pub mod utils;
 
-use crate::indexer::api::get_root;
+use crate::indexer::api::{get_envelope_raw, get_root};
 use crate::indexer::cronjob::index;
 use crate::utils::rpc::init_wvm_rpc;
 
@@ -21,13 +21,15 @@ async fn main(
     let provider = init_wvm_rpc().await.unwrap();
 
     // server routes
-    let router = Router::new().route("/", get(get_root));
+    let router = Router::new()
+        .route("/", get(get_root))
+        .route("/envelope/:txid", get(get_envelope_raw));
 
-    task::spawn(async move {
-        loop {
-            index(provider.clone()).await.unwrap();
-        }
-    });
+    // task::spawn(async move {
+    //     loop {
+    //         index(provider.clone()).await.unwrap();
+    //     }
+    // });
 
     Ok(router.into())
 }
