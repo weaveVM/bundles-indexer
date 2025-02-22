@@ -22,7 +22,7 @@ async fn main(
     let router = Router::new()
         .route("/", get(get_root))
         .route("/envelope/:envelope_txid", get(get_envelope_raw))
-        .route("envelopes/:bundle_txid", get(get_envelopes_of_bundle))
+        .route("/envelopes/:bundle_txid", get(get_envelopes_of_bundle))
         .route("/resolve/:envelope_txid", get(resolve_envelope));
 
     tokio::task::spawn(async move {
