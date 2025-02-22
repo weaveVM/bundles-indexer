@@ -1,7 +1,7 @@
 pub mod indexer;
 pub mod utils;
 
-use crate::indexer::api::{get_envelope_raw, get_root, resolve_envelope};
+use crate::indexer::api::{get_envelope_raw, get_root, resolve_envelope, get_envelopes_of_bundle};
 use crate::indexer::cronjob::index;
 use crate::utils::rpc::init_wvm_rpc;
 
@@ -13,7 +13,6 @@ async fn main(
 ) -> shuttle_axum::ShuttleAxum {
     // load secrets from Secrets.toml into env var;
     secrets.into_iter().for_each(|(key, val)| {
-        println!("{:?} {:?}", key, val);
         std::env::set_var(key, val);
     });
 
@@ -23,6 +22,7 @@ async fn main(
     let router = Router::new()
         .route("/", get(get_root))
         .route("/envelope/:txid", get(get_envelope_raw))
+        .route("envelopes/:txid", get(get_envelopes_of_bundle))
         .route("/resolve/:txid", get(resolve_envelope));
 
     tokio::task::spawn(async move {

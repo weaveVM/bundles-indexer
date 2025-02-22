@@ -1,5 +1,5 @@
 use crate::indexer::cloud::get_bundle_by_envelope;
-use crate::utils::bundles::get_envelope_from_bundle;
+use crate::utils::bundles::{get_envelope_from_bundle, get_envelopes};
 use axum::response::IntoResponse;
 use axum::{extract::Path, Json};
 use reqwest::{header, StatusCode};
@@ -7,6 +7,11 @@ use serde_json::{json, Value};
 
 pub async fn get_root() -> Json<Value> {
     Json(json!({"status": "running"}))
+}
+
+pub async fn get_envelopes_of_bundle(Path(bundle_txid): Path<String>) -> Json<Value>  {
+    let envelopes = get_envelopes(&bundle_txid).await.unwrap_or_default();
+    Json(serde_json::to_value(&envelopes).unwrap())
 }
 
 pub async fn get_envelope_raw(Path(envelope_txid): Path<String>) -> Json<Value> {
