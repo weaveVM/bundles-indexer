@@ -1,7 +1,7 @@
 pub mod indexer;
 pub mod utils;
 
-use crate::indexer::api::{get_envelope_raw, get_root, resolve_envelope, get_envelopes_of_bundle};
+use crate::indexer::api::{get_envelope_raw, get_root, resolve_envelope, get_envelopes_of_bundle, get_bundles_of_block, get_envelopes_of_block};
 use crate::indexer::cronjob::index;
 use crate::utils::rpc::init_wvm_rpc;
 
@@ -23,7 +23,9 @@ async fn main(
         .route("/", get(get_root))
         .route("/envelope/:envelope_txid", get(get_envelope_raw))
         .route("/envelopes/:bundle_txid", get(get_envelopes_of_bundle))
-        .route("/resolve/:envelope_txid", get(resolve_envelope));
+        .route("/resolve/:envelope_txid", get(resolve_envelope))
+        .route("/block/bundles/:block_nr", get(get_bundles_of_block))
+        .route("/block/envelopes/:block_nr", get(get_envelopes_of_block));
 
     tokio::task::spawn(async move {
         loop {

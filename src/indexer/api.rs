@@ -1,5 +1,6 @@
 use crate::indexer::cloud::get_bundle_by_envelope;
 use crate::utils::bundles::{get_envelope_from_bundle, get_envelopes};
+use crate::utils::rpc::{init_wvm_rpc, detect_bundles};
 use axum::response::IntoResponse;
 use axum::{extract::Path, Json};
 use reqwest::{header, StatusCode};
@@ -11,6 +12,24 @@ pub async fn get_root() -> Json<Value> {
 
 pub async fn get_envelopes_of_bundle(Path(bundle_txid): Path<String>) -> Json<Value>  {
     let envelopes = get_envelopes(&bundle_txid).await.unwrap_or_default();
+    Json(serde_json::to_value(&envelopes).unwrap())
+}
+
+pub async fn get_bundles_of_block(Path(block_nr): Path<u32>) -> Json<Value>  {
+    let provider = init_wvm_rpc().await.unwrap();
+    let bundles = detect_bundles(block_nr, provider).await.unwrap();
+    Json(serde_json::to_value(&bundles).unwrap())
+}
+
+pub async fn get_envelopes_of_block(Path(block_nr): Path<u32>) -> Json<Value>  {
+    let mut envelopes : Vec<String> = Vec::new();
+    let provider = init_wvm_rpc().await.unwrap();
+    let bundles = detect_bundles(block_nr, provider).await.unwrap();
+
+    for bundle in bundles {
+        let bundle_envelopes = get_envelopes(&bundle).await.unwrap();
+        bundle_envelopes.iter().for_each(|e| envelopes.push(e.to_string()));
+    }
     Json(serde_json::to_value(&envelopes).unwrap())
 }
 
