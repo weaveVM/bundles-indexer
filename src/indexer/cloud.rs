@@ -26,6 +26,13 @@ struct MaxBlock {
     max_block: u32,
 }
 
+#[derive(Debug, Serialize, Deserialize, Database)]
+pub struct IndexerStats {
+    pub bundles_count: u32,
+    pub envelopes_count: u32,
+    pub last_indexed_block: u32,
+}
+
 async fn ps_client() -> Result<PSConnection, Error> {
     let host = get_env_var("DATABASE_HOST")?;
     let username = get_env_var("DATABASE_USERNAME")?;
@@ -94,4 +101,17 @@ pub async fn get_latest_block_id() -> Result<u32, Error> {
 
     let result: MaxBlock = query(query_str).fetch_one(&conn).await?;
     Ok(result.max_block)
+}
+
+pub async fn get_indexer_stats() -> Result<IndexerStats, Error> {
+    let conn = ps_client().await?;
+    let query_str = "
+       SELECT 
+           COUNT(DISTINCT bundle_txid) as bundles_count,
+           COUNT(envelope_txid) as envelopes_count,
+           (SELECT last_block as max_block FROM block_tracker ORDER BY id DESC LIMIT 1) as last_block 
+       FROM bundles_indexer";
+
+    let result: IndexerStats = query(query_str).fetch_one(&conn).await?;
+    Ok(result)
 }

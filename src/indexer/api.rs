@@ -1,4 +1,4 @@
-use crate::indexer::cloud::get_bundle_by_envelope;
+use crate::indexer::cloud::{get_bundle_by_envelope, get_indexer_stats};
 use crate::utils::bundles::{get_envelope_from_bundle, get_envelopes};
 use crate::utils::rpc::{detect_bundles, init_wvm_rpc};
 use axum::response::IntoResponse;
@@ -43,6 +43,11 @@ pub async fn get_envelope_raw(Path(envelope_txid): Path<String>) -> Json<Value> 
         .await
         .unwrap();
     Json(serde_json::to_value(&envelope).unwrap())
+}
+
+pub async fn get_stats() -> Json<Value> {
+    let stats = get_indexer_stats().await.unwrap();
+    Json(serde_json::to_value(&stats).unwrap())
 }
 
 pub async fn resolve_envelope(Path(envelope_txid): Path<String>) -> impl IntoResponse {

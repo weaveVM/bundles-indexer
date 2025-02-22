@@ -42,5 +42,11 @@ GET /v1/envelopes/:bundle_txid
 GET /v1/resolve/:envelope_txid
 ```
 
+### 6- Return indexer stats
+
+```bash
+GET /v1/stats
+```
+
 ## License
 This project is licensed under the [MIT License](./LICENSE)
