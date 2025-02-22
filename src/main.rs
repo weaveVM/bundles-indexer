@@ -1,14 +1,33 @@
 pub mod indexer;
 pub mod utils;
 
-use crate::utils::constants::BUNDLES_START_BLOCK;
-use crate::utils::rpc::{get_block, init_wvm_rpc, detect_bundles};
+use crate::indexer::api::get_root;
 use crate::indexer::cronjob::index;
+use crate::utils::rpc::init_wvm_rpc;
 
-#[tokio::main]
-async fn main() {
+use axum::{routing::get, Router};
+use tokio::task;
+
+#[shuttle_runtime::main]
+async fn main(
+    #[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore,
+) -> shuttle_axum::ShuttleAxum {
+    // load secrets from Secrets.toml into env var;
+    secrets.into_iter().for_each(|(key, val)| {
+        println!("{:?} {:?}", key, val);
+        std::env::set_var(key, val);
+    });
+
     let provider = init_wvm_rpc().await.unwrap();
-    loop {
-        index(provider.clone()).await.unwrap();
-    }
+
+    // server routes
+    let router = Router::new().route("/", get(get_root));
+
+    task::spawn(async move {
+        loop {
+            index(provider.clone()).await.unwrap();
+        }
+    });
+
+    Ok(router.into())
 }

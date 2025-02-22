@@ -1557,6 +1557,7 @@ dependencies = [
  "dotenv",
  "planetscale-driver",
  "serde",
+ "serde_json",
  "shuttle-axum",
  "shuttle-runtime",
  "tokio",

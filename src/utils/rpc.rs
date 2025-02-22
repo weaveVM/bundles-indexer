@@ -1,11 +1,11 @@
+use crate::utils::constants::BUNDLES_BABE1_ADDRESS;
 use crate::utils::constants::WVM_RPC_URL;
-use alloy::primitives::{BlockNumber, Address};
+use alloy::consensus::{Transaction, Typed2718};
+use alloy::primitives::{Address, BlockNumber};
 use alloy::providers::{Provider, ProviderBuilder};
 use alloy::rpc::types::{BlockTransactions, Transaction as BlockTx};
-use alloy::consensus::{Typed2718, Transaction};
-use crate::utils::constants::BUNDLES_BABE1_ADDRESS;
-use std::str::FromStr;
 use anyhow::Error;
+use std::str::FromStr;
 
 pub type JsonRpc = alloy::providers::fillers::FillProvider<
     alloy::providers::fillers::JoinFill<
@@ -31,7 +31,7 @@ pub async fn init_wvm_rpc() -> Result<JsonRpc, Error> {
 }
 
 pub async fn get_latest_block_nr(provider: JsonRpc) -> Result<u64, Error> {
-     Ok(provider.get_block_number().await?)
+    Ok(provider.get_block_number().await?)
 }
 
 pub async fn get_block(
