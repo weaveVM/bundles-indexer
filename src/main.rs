@@ -34,7 +34,13 @@ async fn main(
 
     tokio::task::spawn(async move {
         loop {
-            index(provider.clone()).await.unwrap();
+            match index(provider.clone()).await {
+                Ok(_) => println!("\nIndexer batch completed successfully\n"),
+                Err(e) => {
+                    println!("\nIndexer error: {:?}, restarting...", e);
+                    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+                }
+            }
         }
     });
 

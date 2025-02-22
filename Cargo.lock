@@ -1561,6 +1561,7 @@ dependencies = [
  "axum 0.7.9",
  "bundler",
  "dotenv",
+ "futures",
  "hex",
  "planetscale-driver",
  "reqwest 0.12.12",
