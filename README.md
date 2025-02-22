@@ -6,7 +6,7 @@
 
 
 ## About
-`bundles-indexer` is an indexer for WeaveVM's 0xbabe bundles for a easier envelopes retrieval. Despite being a cloud indexing tool, bundles & envelopes data is retrieved from WeaveVM network.
+`bundles-indexer` is an indexer for WeaveVM's [0xbabe bundles](https://github.com/weaveVM/bundler) for a easier envelopes retrieval. Despite being a cloud indexing tool, bundles & envelopes data is retrieved from WeaveVM network.
 
 ## REST API methods: V1
 
