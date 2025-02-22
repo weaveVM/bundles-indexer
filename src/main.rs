@@ -21,9 +21,9 @@ async fn main(
     // server routes
     let router = Router::new()
         .route("/", get(get_root))
-        .route("/envelope/:txid", get(get_envelope_raw))
-        .route("envelopes/:txid", get(get_envelopes_of_bundle))
-        .route("/resolve/:txid", get(resolve_envelope));
+        .route("/envelope/:envelope_txid", get(get_envelope_raw))
+        .route("envelopes/:bundle_txid", get(get_envelopes_of_bundle))
+        .route("/resolve/:envelope_txid", get(resolve_envelope));
 
     tokio::task::spawn(async move {
         loop {
