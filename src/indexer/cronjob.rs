@@ -41,7 +41,7 @@ pub async fn index(client: JsonRpc) -> Result<(), Error> {
         let start_block = get_latest_block_id()
             .await
             .map_or(BUNDLES_START_BLOCK, |nr| nr + 1);
-        let mut end_block = start_block + 100;
+        let mut end_block = start_block + 1000;
 
         if end_block > wvm_last_rpc_block {
             end_block = wvm_last_rpc_block
